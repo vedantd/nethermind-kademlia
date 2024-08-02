@@ -37,7 +37,7 @@ public class Kademlia<TNode, TContentKey, TContent> : IKademlia<TNode, TContentK
     private readonly TimeSpan _refreshInterval;
     private readonly ILogger _logger;
 
-    private bool _useTreeImplementation = false;
+    private bool _useTreeImplementation = true;
 
     public Kademlia(
         INodeHashProvider<TNode, TContentKey> nodeHashProvider,
@@ -73,6 +73,7 @@ public class Kademlia<TNode, TContentKey, TContent> : IKademlia<TNode, TContentK
     public void UseTreeImplementation(bool useTree)
     {
         _useTreeImplementation = useTree;
+        _logger.Info($"Switched to {(useTree ? "tree-based" : "array-based")} implementation");
         if (useTree)
         {
             // Initialize the tree-based implementation
@@ -104,7 +105,8 @@ public class Kademlia<TNode, TContentKey, TContent> : IKademlia<TNode, TContentK
         _isRefreshing.TryRemove(node, out _);
 
         if (_useTreeImplementation)
-        {
+        {   
+            _logger.Debug($"Adding/refreshing node {node} in tree-based implementation");
             if (!_bucketTree.TryAddOrRefresh(node, out TNode? toRefresh))
             {
                 if (toRefresh != null) TryRefresh(toRefresh);
@@ -358,6 +360,8 @@ public class Kademlia<TNode, TContentKey, TContent> : IKademlia<TNode, TContentK
         while (true)
         {
             await Bootstrap(token);
+            
+
 
             await Task.Delay(_refreshInterval, token);
         }

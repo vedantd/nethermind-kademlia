@@ -55,12 +55,14 @@ public class KBucketTree<TNode, TContentKey> where TNode : notnull
             }
 
             if (current.Bucket.TryAddOrRefresh(node, out toRefresh))
-            {
+            {   
+                Console.WriteLine($"Added/refreshed node {node} at depth {current.Depth}");
                 return true;
             }
 
             if (current.Depth == _maxDepth - 1)
             {
+                Console.WriteLine($"Failed to add node {node} at max depth {_maxDepth}");
                 return false;
             }
         }
@@ -124,4 +126,5 @@ public class KBucketTree<TNode, TContentKey> where TNode : notnull
         int bitIndex = index % 8;
         return (hash.Bytes[byteIndex] & (1 << (7 - bitIndex))) != 0;
     }
+
 }
