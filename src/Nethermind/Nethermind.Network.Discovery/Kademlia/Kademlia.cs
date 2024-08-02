@@ -17,8 +17,7 @@ namespace Nethermind.Network.Discovery.Kademlia;
 /// is more accurate without having to spill over to other kbucket to fill the query.
 /// This is even more so with tree based kbucket where bucket without currentid can also be splitted down (to a predefined
 /// limit) which makes the lookup even more accurate.
-///
-/// TODO: Switch to tree based kademlia implementation.
+
 public class Kademlia<TNode, TContentKey, TContent> : IKademlia<TNode, TContentKey, TContent> where TNode : notnull
 {
     private IKademlia<TNode, TContentKey, TContent>.IStore _store;
